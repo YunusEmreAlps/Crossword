@@ -27,6 +27,8 @@ int main()
 
     srand(time(NULL)) ;
 
+    printf(" Left-Right \n\n") ;
+
     printf("\n ---------- \n\n") ;
 
     for( i=0 ; i < Row ; i++ )
@@ -46,6 +48,8 @@ int main()
 
     printf("\n ---------- \n\n") ;
 
+    printf(" Up-Down \n\n") ;
+
     for( i=0 ; i<Col ; i++ )
     {
         for( j=0 ; j<Row ; j++ )
@@ -63,6 +67,8 @@ int main()
     printf("\n ---------- \n\n") ;
 
     int k = 0 ;
+
+    printf(" Right-Left \n\n") ;
 
     for( i=0 ; i<Row ; i++ )
     {
