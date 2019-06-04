@@ -6,9 +6,9 @@
 #include <string.h> // string length
 #include <time.h> // random function
 
-#define Row 4
-#define Col 4 // column
-#define Len 10 // searched word length
+#define Row 5  // Row
+#define Col 5 //  column
+#define Len 10 //  searched word length
 
 char Word[Row][Col]  ; // crossword
 char Word2[Col][Row] ; // transpose
@@ -150,7 +150,7 @@ int left_right(char *P_1)
                     {
 
                         Result++ ;
-                        printf(" + RL:%d , CL : %d \n",RL,CL) ;
+                        printf(" + Row Number:%d , Column Number : %d \n",RL+1,CL+1) ;
                         k= -1 ;
                         z=0 ;
                         Counter=0 ;
@@ -184,7 +184,7 @@ int left_right(char *P_1)
                     if((Counter2 == Length)||(Length == z))
                     {
                         Result++ ;
-                        printf(" + RL:%d , CL : %d \n",RL,CL) ;
+                        printf(" + Row Number:%d , Column Number : %d \n",RL+1,CL+1) ;
                         z= -1 ;
                         k= 0 ;
 
@@ -262,7 +262,7 @@ int up_down(char *P_2)
                     {
 
                         Result++ ;
-                        printf(" + RL:%d , CL : %d \n",CLo,RLo) ;
+                        printf(" + Row Number:%d , Column Number: %d \n",CLo+1,RLo+1) ;
                         k= -1 ;
                         z=0 ;
                         Counter=0 ;
@@ -369,7 +369,7 @@ int right_left(char *P_3)
                     {
 
                         Result++ ;
-                        printf(" + RL:%d , CL : %d \n",RL,Col-CL) ;
+                        printf(" + Row Number:%d , Column Number : %d \n",RL+1,Col-CL) ;
                         k= -1 ;
                         z=0 ;
                         Counter=0 ;
@@ -403,7 +403,7 @@ int right_left(char *P_3)
                     if((Counter2 == Length)||(Length == z))
                     {
                         Result++ ;
-                        printf(" + RL:%d , CL : %d \n",RL,Col-CL) ;
+                        printf(" + Row Number:%d , Column Number: %d \n",RL+1,Col-CL) ;
                         z= -1 ;
                         k= 0 ;
 
