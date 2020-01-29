@@ -1,434 +1,323 @@
-// Crossword
+// crossword
 
+#include <time.h>
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
-#include <string.h> // string length
-#include <time.h> // random function
+#include <string.h>
 
-#define Row 5  // Row
-#define Col 5 //  column
-#define Len 10 //  searched word length
+#define row 5 // row number
+#define col 5 // column number
+#define len 5 // maximum word length
 
-char Word[Row][Col]  ; // crossword
-char Word2[Col][Row] ; // transpose
-char Word3[Row][Col] ;
-char SWord[Len] ; // searched word
-//char Word[Row][Col] = {{'E','U','E','U'},{'Z','E','U','S'},{'D','E','U','E'},{'U','E','E','T'}} ;
+// ----------
+// global variables
+int rl=0, cl=0; // row location, column location
+int leng=0, res=0;
+int cnt1=0, cnt2=0;
+int i=0, j=0, k=0, z=0; // loop variable
 
-int left_right(char *P_1) ;
-int up_down(char *P_2) ;
+char *spoint; // pointer
+char sword[len]; // searched word
+char word[row][col]; // crossword
+char word2[col][row]; // transpose
+char word3[row][col];
 
-int right_left(char *P_3) ;
+// ----------
+// signature of functions
+void left_right();
+void up_down();
+void right_left();
 
+// ----------
+// main function
 int main()
 {
-    int i,j ; // loop variable
+    srand(time(NULL)); // random letter
 
-    srand(time(NULL)) ;
-
-    printf(" Left-Right \n\n") ;
-
-    printf("\n ---------- \n\n") ;
-
-    for( i=0 ; i < Row ; i++ )
+    printf(" ---------------\n"); // left-right part
+    for(i=0; i<row; i++)
     {
-        for( j=0 ; j < Col ; j++ )
+        printf(" ");
+        for(j=0; j<col; j++)
         {
-            Word[i][j] = 'A' + ( rand()%26 ) ; // A = 65 <- ASCII , Z = 90 <- ASCII
-
-            printf(" %c ",Word[i][j]) ;
+            word[i][j]= 'A' + (rand()%26); // A=65(ASCII value), Z=90(ASCII value)
+            printf(" %c ",word[i][j]);
         }
-        printf("\n") ; // new line
+        printf("\n");
+    }
+    printf(" ---------------\n");
+
+    printf(" - Left-Right \n\n");
+    left_right(); // left-right part is end
+
+    printf(" ---------------\n"); // up-down part
+    for(i=0; i<col; i++)
+    {
+        for(j=0; j<row; j++)
+        {
+            word2[i][j] = word[j][i];
+        }
     }
 
-    printf("\n ---------- \n\n") ;
+    printf(" - Up-Down \n\n");
+    up_down(); // up-down part is end
 
-    left_right(Word) ;
-
-    printf("\n ---------- \n\n") ;
-
-    printf(" Up-Down \n\n") ;
-
-    for( i=0 ; i<Col ; i++ )
+    printf(" ---------------\n"); // right-left part
+    for(i=0; i<row; i++)
     {
-        for( j=0 ; j<Row ; j++ )
+        for(j=col-1; j>-1; j--)
         {
-            Word2[i][j] = Word[j][i] ;
-            printf(" %c ",Word2[i][j]) ;
+            word3[i][k] = word[i][j];
+            k++;
         }
-        printf("\n") ;
+        k=0;
     }
 
-    printf("\n ---------- \n\n") ;
+    printf(" - Right-Left \n\n");
+    right_left() ; // right-left part is end
 
-    up_down(Word2) ;
+    printf(" ---------------\n");
 
-    printf("\n ---------- \n\n") ;
-
-    int k = 0 ;
-
-    printf(" Right-Left \n\n") ;
-
-    for( i=0 ; i<Row ; i++ )
-    {
-        for( j=Col-1 ; j>-1 ; j-- )
-        {
-            Word3[i][k] = Word[i][j] ;
-            k++ ;
-        }
-        k=0 ;
-    }
-
-    for( i= 0 ; i<Row ; i++ )
-    {
-        for( j=0 ; j<Col ; j++ )
-        {
-            printf(" %c ",Word3[i][j]) ;
-        }
-        printf("\n") ;
-    }
-
-
-    printf("\n ---------- \n\n") ;
-
-    right_left(Word3) ;
-
-    printf("\n ---------- \n\n") ;
-
-
-    getch() ;
-    return 0 ;
+    getch();
+    return 0;
 }
 
-int left_right(char *P_1)
+// ----------
+void left_right()
 {
-    printf(" Please enter a searched word : ") ;
-    scanf("%s",&SWord) ;
+    printf(" - Enter word : ");
+    scanf("%s",&sword);
 
-    char *SP ; // pointer
+    spoint=sword;
+    leng=strlen(sword); // word length
+    res=0; // word number
 
-    SP = SWord ; // assign
-
-    int Length = strlen(SWord) ; // searched word length
-
-    int Result = 0 ; // total searched word number
-
-    if(Length > Col ) // Warning
+    if(leng>col)
     {
-        printf("\n ---------- \n\n") ;
-
-        printf(" Error : Searched word length bigger than Column size . \n ") ;
-
-        printf("\n ---------- \n\n") ;
-
-        return 0 ;
+        printf(" - Error : word length bigger than column size.\n");
+        return 0;
     }
-
-    else if (Length <= Col )
+    else if(leng<=col)
     {
-        int i,j,k=0,z=0 ;   // loop
-        int RL = 0,CL = 0 ;  // Row Location , Column Location
-        int Counter = 0,Counter2 = 0 ;  // Length == Counter
-
-        for( i=0 ; i<Row ; i++ )
+        for(i=0; i<row; i++)
         {
-            for( j=0 ; j<Col ; j++ )
+            for(j=0; j<col; j++)
             {
-                if(*(*(Word+i)+j) == SP[k])
+                if(*(*(word+i)+j) == spoint[k])
                 {
-                    Counter++ ;
-
+                    cnt1++;
                     if(k==0)
                     {
-                        RL = i ;
-                        CL = j ;
-
+                        rl = i;
+                        cl = j;
                     }
-
-                    if((Counter == Length)||(Length == k))
+                    if((cnt1 == leng)||(leng == k))
                     {
-
-                        Result++ ;
-                        printf(" + Row Number:%d , Column Number : %d \n",RL+1,CL+1) ;
-                        k= -1 ;
-                        z=0 ;
-                        Counter=0 ;
-
+                        res++;
+                        printf(" + Row Number:%d , Column Number : %d \n",rl+1,cl+1);
+                        k= -1;
+                        z=0;
+                        cnt1=0;
                     }
-
                     k++ ;
-
-                    //printf(" + Row:%d , Col:%d , Letter : %c \n",i,j,Word[i][j]) ;
-
-                    if((j == Row-1)&&(k!=Length))
+                    if((j == row-1)&&(k!=leng))
                     {
-                        Counter = 0 ;
-                        k = 0 ;
+                        cnt1 = 0;
+                        k = 0;
                     }
-
                 }
-
-                else if ((*(*(Word+i)+j) == SP[z]))
+                else if ((*(*(word+i)+j) == spoint[z]))
                 {
-                    Counter2++ ;
-
+                    cnt2++;
                     if(z==0)
                     {
-                        RL = i ;
-                        CL = j ;
-                        Counter = 0 ;
-                        k=0 ;
+                        rl=i;
+                        cl=j;
+                        cnt1 = 0;
+                        k=0;
                     }
-
-                    if((Counter2 == Length)||(Length == z))
+                    if((cnt2 == leng)||(leng == z))
                     {
-                        Result++ ;
-                        printf(" + Row Number:%d , Column Number : %d \n",RL+1,CL+1) ;
-                        z= -1 ;
-                        k= 0 ;
+                        res++;
+                        printf(" + Row Number:%d , Column Number : %d \n",rl+1,cl+1);
+                        z=-1;
+                        k=0;
 
-                        Counter2=0 ;
+                        cnt2=0;
                     }
-
-                    z++ ;
+                    z++;
                 }
-
-
-
-
                 else
                 {
-                    k = 0 ;
-                    Counter = 0 ;
-                    z = 0 ;
-                    Counter2 = 0 ;
+                    k=0;
+                    cnt1=0;
+                    z=0;
+                    cnt2=0;
                 }
             }
-
         }
-
     }
-
-    printf(" Left_Right Result : %d \n",Result) ;
-
+    printf("\n - (left-right) result : %d \n",res);
 }
 
-int up_down(char *P_2)
+// ----------
+void up_down()
 {
-    printf(" Please enter a searched word : ") ;
-    scanf("%s",&SWord) ;
+    printf(" - Enter word : ");
+    scanf("%s",&sword);
 
-    char *SP ; // pointer
+    spoint=sword;
+    leng=strlen(sword); // word length
+    res=0; // word number
 
-    SP = SWord ; // assign
-
-    int Length = strlen(SWord) ; // searched word length
-
-    int Result = 0 ; // total searched word number
-
-    if(Length > Row) // Warning
+    if(leng>row) // Warning
     {
-        printf("\n ---------- \n\n") ;
-
-        printf(" Error : Searched word length bigger than Row size . \n ") ;
-
-        printf("\n ---------- \n\n") ;
-
-        return 0 ;
+        printf(" - Error : word length bigger than row size.\n");
+        return 0;
     }
-
-    else if (Length <= Row)
+    else if(leng<=row)
     {
-        int i,j,k=0,z=0 ;   // loop
-        int RLo = 0,CLo = 0 ;  // Row Location , Column Location
-        int Counter = 0,Counter2 = 0 ;  // Length == Counter
+        rl=0, cl=0; // row location, column location
 
-        for( i=0 ; i<Col ; i++ )
+        for(i=0; i<col; i++)
         {
-            for( j=0 ; j<Row ; j++ )
+            for(j=0; j<row; j++)
             {
-                if(*(*(Word2+i)+j) == SP[k])
+                if(*(*(word2+i)+j) == spoint[k])
                 {
-                    Counter++ ;
-
+                    cnt1++;
                     if(k==0)
                     {
-                        RLo = i ;
-                        CLo = j ;
+                        rl=i;
+                        cl=j;
                     }
 
-                    if((Counter == Length)||(Length == k))
+                    if((cnt1 == leng)||(leng == k))
                     {
-
-                        Result++ ;
-                        printf(" + Row Number:%d , Column Number: %d \n",CLo+1,RLo+1) ;
-                        k= -1 ;
-                        z=0 ;
-                        Counter=0 ;
-
+                        res++;
+                        printf(" + Row Number:%d , Column Number: %d \n",cl+1,rl+1);
+                        k=-1;
+                        z=0;
+                        cnt1=0;
                     }
                     k++ ;
-
-                    if((j == Row-1)&&(k!=Length))
+                    if((j == row-1)&&(k!=leng))
                     {
-                        Counter = 0 ;
-                        k = 0 ;
+                        cnt1=0;
+                        k =0;
                     }
-
-                    //printf(" + Row:%d , Col:%d , Letter : %c \n",i,j,Word[i][j]) ;
-
                 }
-
-                else if ((*(*(Word2+i)+j) == SP[z]))
+                else if ((*(*(word2+i)+j) == spoint[z]))
                 {
-                    Counter2++ ;
-
+                    cnt2++;
                     if(z==0)
                     {
-                        RLo = i ;
-                        CLo = j ;
-                        Counter = 0 ;
-                        k=0 ;
+                        rl=i;
+                        cl=j;
+                        cnt1=0;
+                        k=0;
                     }
 
-                    if((Counter2 == Length)||(Length == z))
+                    if((cnt2 == leng)||(leng == z))
                     {
-                        Result++ ;
-                        printf(" + RL:%d , CL : %d \n",CLo,RLo) ;
-                        z= -1 ;
-                        k= 0 ;
-
-                        Counter2=0 ;
+                        res++;
+                        printf(" + RL:%d , CL : %d \n",cl,rl);
+                        z=-1;
+                        k=0;
+                        cnt2=0;
                     }
-
-                    z++ ;
+                    z++;
                 }
-
                 else
                 {
-                    k = 0 ;
-                    Counter = 0 ;
-                    z = 0 ;
-                    Counter2 = 0 ;
+                    k=0;
+                    cnt1=0;
+                    z=0;
+                    cnt2=0;
                 }
             }
-
         }
     }
 
-    printf(" Up_Down Result : %d",Result) ;
+    printf("\n - (up-down) result : %d \n",res);
 }
 
-int right_left(char *P_3)
+// ----------
+void right_left()
 {
-    printf(" Please enter a searched word : ") ;
-    scanf("%s",&SWord) ;
+    printf(" - Enter word : ");
+    scanf("%s",&sword);
 
-    char *SP ; // pointer
+    spoint=sword;
+    leng=strlen(sword); // word length
+    res=0; // word number
 
-    SP = SWord ; // assign
-
-    int Length = strlen(SWord) ; // searched word length
-
-    int Result = 0 ; // total searched word number
-
-    if(Length > Col ) // Warning
+    if(leng>col)
     {
-        printf("\n ---------- \n\n") ;
-
-        printf(" Error : Searched word length bigger than Column size . \n ") ;
-
-        printf("\n ---------- \n\n") ;
-
-        return 0 ;
+        printf(" - Error : word length bigger than column size.\n");
+        return 0;
     }
-
-    else if (Length <= Col )
+    else if(leng<=col)
     {
-        int i,j,k=0,z=0 ;   // loop
-        int RL = 0,CL = 0 ;  // Row Location , Column Location
-        int Counter = 0,Counter2 = 0 ;  // Length == Counter
+        rl=0, cl=0; // row location, column location
 
-        for( i=0 ; i<Row ; i++ )
+        for(i=0; i<row; i++)
         {
-            for( j=0 ; j<Col ; j++ )
+            for(j=0; j<col; j++)
             {
-                if(*(*(Word3+i)+j) == SP[k])
+                if(*(*(word3+i)+j) == spoint[k])
                 {
-                    Counter++ ;
-
+                    cnt1++;
                     if(k==0)
                     {
-                        RL = i ;
-                        CL = j ;
-
+                        rl=i;
+                        cl=j;
                     }
-
-                    if((Counter == Length)||(Length == k))
+                    if((cnt1 == leng)||(leng == k))
                     {
-
-                        Result++ ;
-                        printf(" + Row Number:%d , Column Number : %d \n",RL+1,Col-CL) ;
-                        k= -1 ;
-                        z=0 ;
-                        Counter=0 ;
-
+                        res++;
+                        printf(" + Row Number:%d , Column Number : %d \n",rl+1,col-cl);
+                        k=-1;
+                        z=0;
+                        cnt1=0;
                     }
-
-                    k++ ;
-
-                    //printf(" + Row:%d , Col:%d , Letter : %c \n",i,j,Word[i][j]) ;
-
-                    if((j == Row-1)&&(k!=Length))
+                    k++;
+                    if((j == row-1)&&(k!=leng))
                     {
-                        Counter = 0 ;
-                        k = 0 ;
+                        cnt1=0;
+                        k=0;
                     }
-
                 }
-
-                else if ((*(*(Word3+i)+j) == SP[z]))
+                else if ((*(*(word3+i)+j) == spoint[z]))
                 {
-                    Counter2++ ;
-
+                    cnt2++;
                     if(z==0)
                     {
-                        RL = i ;
-                        CL = j ;
-                        Counter = 0 ;
-                        k=0 ;
+                        rl=i;
+                        cl=j;
+                        cnt1=0;
+                        k=0;
                     }
-
-                    if((Counter2 == Length)||(Length == z))
+                    if((cnt2 == leng)||(leng == z))
                     {
-                        Result++ ;
-                        printf(" + Row Number:%d , Column Number: %d \n",RL+1,Col-CL) ;
-                        z= -1 ;
-                        k= 0 ;
-
-                        Counter2=0 ;
+                        res++;
+                        printf(" + Row Number:%d , Column Number: %d \n",rl+1,col-cl);
+                        z=-1;
+                        k=0;
+                        cnt2=0;
                     }
-
-                    z++ ;
+                    z++;
                 }
-
-
-
-
                 else
                 {
-                    k = 0 ;
-                    Counter = 0 ;
-                    z = 0 ;
-                    Counter2 = 0 ;
+                    k=0;
+                    cnt1=0;
+                    z=0;
+                    cnt2=0;
                 }
             }
-
         }
-
     }
-
-    printf(" Right_Left Result : %d \n",Result) ;
-
+    printf("\n - (right-left) result : %d \n",res);
 }
